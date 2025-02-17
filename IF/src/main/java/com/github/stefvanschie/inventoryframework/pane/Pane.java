@@ -8,7 +8,6 @@ import com.github.stefvanschie.inventoryframework.exception.XMLLoadException;
 import com.github.stefvanschie.inventoryframework.exception.XMLReflectionException;
 import com.github.stefvanschie.inventoryframework.pane.util.Mask;
 import com.github.stefvanschie.inventoryframework.pane.util.Slot;
-import com.github.stefvanschie.inventoryframework.util.InventoryViewUtil;
 import com.github.stefvanschie.inventoryframework.util.SkullUtil;
 import com.github.stefvanschie.inventoryframework.util.UUIDTagType;
 import com.github.stefvanschie.inventoryframework.util.XMLUtil;
@@ -726,7 +725,7 @@ public abstract class Pane {
         } catch (Throwable t) {
             throw new RuntimeException(
                     "Exception while handling click event in inventory '"
-                    + InventoryViewUtil.getInstance().getTitle(event.getView()) + "', slot=" + event.getSlot() +
+                    + event.getView().getTitle() + "', slot=" + event.getSlot() +
                     ", for " + getClass().getSimpleName() + ", x=" + getX() + ", y=" + getY()
                     + ", length=" + length + ", height=" + height,
                     t

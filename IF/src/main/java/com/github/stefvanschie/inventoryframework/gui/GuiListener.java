@@ -1,12 +1,9 @@
 package com.github.stefvanschie.inventoryframework.gui;
 
-import com.github.stefvanschie.inventoryframework.gui.type.*;
 import com.github.stefvanschie.inventoryframework.gui.type.util.Gui;
-import com.github.stefvanschie.inventoryframework.util.InventoryViewUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.LivingEntity;
-import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -67,7 +64,7 @@ public class GuiListener implements Listener {
         }
 
         InventoryView view = event.getView();
-        Inventory inventory = InventoryViewUtil.getInstance().getInventory(view, event.getRawSlot());
+        Inventory inventory = view.getInventory(event.getRawSlot());
 
         if (inventory == null) {
             gui.callOnOutsideClick(event);
@@ -75,7 +72,7 @@ public class GuiListener implements Listener {
         }
 
         gui.callOnGlobalClick(event);
-        if (inventory.equals(InventoryViewUtil.getInstance().getTopInventory(view))) {
+        if (inventory.equals(view.getTopInventory())) {
             gui.callOnTopClick(event);
         } else {
             gui.callOnBottomClick(event);
@@ -95,127 +92,6 @@ public class GuiListener implements Listener {
     }
 
     /**
-     * Resets the items into the correct positions for anvil guis
-     *
-     * @param event the event fired
-     * @since 0.8.0
-     * @deprecated no longer used internally
-     */
-    @Deprecated
-    public void resetItemsAnvil(@NotNull InventoryClickEvent event) {
-        InventoryHolder holder = event.getInventory().getHolder();
-
-        if (!(holder instanceof AnvilGui) || !(event.getWhoClicked() instanceof Player)) {
-            return;
-        }
-
-        ((AnvilGui) holder).handleClickEvent(event);
-    }
-
-    /**
-     * Resets the items into the correct positions for beacon guis
-     *
-     * @param event the event fired
-     * @since 0.8.0
-     */
-    @EventHandler(priority = EventPriority.HIGHEST)
-    public void resetItemsBeacon(@NotNull InventoryClickEvent event) {
-        InventoryHolder holder = event.getInventory().getHolder();
-
-        if (!(holder instanceof BeaconGui) || !(event.getWhoClicked() instanceof Player)) {
-            return;
-        }
-
-        ((BeaconGui) holder).handleClickEvent(event);
-    }
-
-    /**
-     * Resets the items into the correct positions for cartography table guis
-     *
-     * @param event the event fired
-     * @since 0.8.0
-     */
-    @EventHandler(priority = EventPriority.HIGHEST)
-    public void resetItemsCartographyTable(@NotNull InventoryClickEvent event) {
-        InventoryHolder holder = event.getInventory().getHolder();
-
-        if (!(holder instanceof CartographyTableGui) || !(event.getWhoClicked() instanceof Player)) {
-            return;
-        }
-
-        ((CartographyTableGui) holder).handleClickEvent(event);
-    }
-
-    /**
-     * Resets the items into the correct positions for enchanting table guis
-     *
-     * @param event the event fired
-     * @since 0.8.0
-     */
-    @EventHandler(priority = EventPriority.HIGHEST)
-    public void resetItemsEnchantingTable(@NotNull InventoryClickEvent event) {
-        InventoryHolder holder = event.getInventory().getHolder();
-
-        if (!(holder instanceof EnchantingTableGui) || !(event.getWhoClicked() instanceof Player)) {
-            return;
-        }
-
-        ((EnchantingTableGui) holder).handleClickEvent(event);
-    }
-
-    /**
-     * Resets the items into the correct positions for grindstone guis
-     *
-     * @param event the event fired
-     * @since 0.8.0
-     * @deprecated no longer used internally
-     */
-    @Deprecated
-    public void resetItemsGrindstone(@NotNull InventoryClickEvent event) {
-        InventoryHolder holder = event.getInventory().getHolder();
-
-        if (!(holder instanceof GrindstoneGui) || !(event.getWhoClicked() instanceof Player)) {
-            return;
-        }
-
-        ((GrindstoneGui) holder).handleClickEvent(event);
-    }
-
-    /**
-     * Resets the items into the correct positions for stonecutter guis
-     *
-     * @param event the event fired
-     * @since 0.8.0
-     */
-    @EventHandler(priority = EventPriority.HIGHEST)
-    public void resetItemsStonecutter(@NotNull InventoryClickEvent event) {
-        InventoryHolder holder = event.getInventory().getHolder();
-
-        if (!(holder instanceof StonecutterGui) || !(event.getWhoClicked() instanceof Player)) {
-            return;
-        }
-
-        ((StonecutterGui) holder).handleClickEvent(event);
-    }
-
-    /**
-     * Resets the items into the correct positions for smithing table guis
-     *
-     * @param event the event fired
-     * @since 0.8.0
-     */
-    @EventHandler(priority = EventPriority.HIGHEST)
-    public void resetItemsSmithingTable(@NotNull InventoryClickEvent event) {
-        InventoryHolder holder = event.getInventory().getHolder();
-
-        if (!(holder instanceof SmithingTableGui) || !(event.getWhoClicked() instanceof Player)) {
-            return;
-        }
-
-        ((SmithingTableGui) holder).handleClickEvent(event);
-    }
-
-    /**
      * Handles users picking up items while their bottom inventory is in use.
      *
      * @param event the event fired when an entity picks up an item
@@ -229,7 +105,7 @@ public class GuiListener implements Listener {
             return;
         }
 
-        Gui gui = getGui(InventoryViewUtil.getInstance().getTopInventory(((HumanEntity) entity).getOpenInventory()));
+        Gui gui = getGui(((HumanEntity) entity).getOpenInventory().getTopInventory());
 
         if (gui == null || !gui.isPlayerInventoryUsed()) {
             return;
@@ -271,11 +147,11 @@ public class GuiListener implements Listener {
             boolean top = false, bottom = false;
 
             for (int inventorySlot : inventorySlots) {
-                Inventory inventory = InventoryViewUtil.getInstance().getInventory(view, inventorySlot);
+                Inventory inventory = view.getInventory(inventorySlot);
 
-                if (InventoryViewUtil.getInstance().getTopInventory(view).equals(inventory)) {
+                if (view.getTopInventory().equals(inventory)) {
                     top = true;
-                } else if (InventoryViewUtil.getInstance().getBottomInventory(view).equals(inventory)) {
+                } else if (view.getBottomInventory().equals(inventory)) {
                     bottom = true;
                 }
 
@@ -295,44 +171,28 @@ public class GuiListener implements Listener {
             }
         } else {
             int index = inventorySlots.toArray(new Integer[0])[0];
-            InventoryType.SlotType slotType = InventoryViewUtil.getInstance().getSlotType(view, index);
+            InventoryType.SlotType slotType = view.getSlotType(index);
 
             boolean even = event.getType() == DragType.EVEN;
 
             ClickType clickType = even ? ClickType.LEFT : ClickType.RIGHT;
             InventoryAction inventoryAction = even ? InventoryAction.PLACE_SOME : InventoryAction.PLACE_ONE;
 
-            ItemStack previousViewCursor = InventoryViewUtil.getInstance().getCursor(view);
+            ItemStack previousViewCursor = view.getCursor();
             // Overwrite getCursor in inventory click event to mimic real event fired by Bukkit.
-            InventoryViewUtil.getInstance().setCursor(view, event.getOldCursor());
+            view.setCursor(event.getOldCursor());
             //this is a fake click event, firing this may cause other plugins to function incorrectly, so keep it local
             InventoryClickEvent inventoryClickEvent = new InventoryClickEvent(view, slotType, index, clickType,
                 inventoryAction);
 
             onInventoryClick(inventoryClickEvent);
             // Restore previous cursor only if someone has not changed it manually in onInventoryClick.
-            if (Objects.equals(InventoryViewUtil.getInstance().getCursor(view), event.getOldCursor())) {
-                InventoryViewUtil.getInstance().setCursor(view, previousViewCursor);
+            if (Objects.equals(view.getCursor(), event.getOldCursor())) {
+                view.setCursor(previousViewCursor);
             }
 
             event.setCancelled(inventoryClickEvent.isCancelled());
         }
-    }
-
-    /**
-     * Handles the selection of trades in merchant guis
-     *
-     * @param event the event fired
-     */
-    @EventHandler(ignoreCancelled = true)
-    public void onTradeSelect(@NotNull TradeSelectEvent event) {
-        Gui gui = getGui(event.getInventory());
-
-        if (!(gui instanceof MerchantGui)) {
-            return;
-        }
-
-        ((MerchantGui) gui).callOnTradeSelect(event);
     }
 
     /**
@@ -364,14 +224,6 @@ public class GuiListener implements Listener {
 
             if (gui.getViewerCount() == 1) {
                 activeGuiInstances.remove(gui);
-            }
-
-            if (gui instanceof AnvilGui) {
-                ((AnvilGui) gui).handleClose(humanEntity);
-            } else if (gui instanceof MerchantGui) {
-                ((MerchantGui) gui).handleClose(humanEntity);
-            } else if (gui instanceof ModernSmithingTableGui) {
-                ((ModernSmithingTableGui) gui).handleClose(humanEntity);
             }
 
             //Bukkit doesn't like it if you open an inventory while the previous one is being closed
