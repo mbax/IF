@@ -1,0 +1,11 @@
+[versions]
+com-mojang-authlib = "6.0.57"
+io-papermc-paper-paper-api = "1.21.4-R0.1-SNAPSHOT"
+org-jetbrains-annotations = "26.0.1"
+org-junit-jupiter-junit-jupiter-engine = "5.11.4"
+
+[libraries]
+com-mojang-authlib = { module = "com.mojang:authlib", version.ref = "com-mojang-authlib" }
+io-papermc-paper-paper-api = { module = "io.papermc.paper:paper-api", version.ref = "io-papermc-paper-paper-api" }
+org-jetbrains-annotations = { module = "org.jetbrains:annotations", version.ref = "org-jetbrains-annotations" }
+org-junit-jupiter-junit-jupiter-engine = { module = "org.junit.jupiter:junit-jupiter-engine", version.ref = "org-junit-jupiter-junit-jupiter-engine" }

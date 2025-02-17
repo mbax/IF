@@ -1,6 +1,5 @@
 package com.github.stefvanschie.inventoryframework.util;
 
-import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.Test;
 
 import java.util.Map;
@@ -25,7 +24,7 @@ public class GeometryUtilTest {
         testRotation(3, 1, GeometryUtil.processCounterClockwiseRotation(1, 0, 4, 4, 270));
     }
 
-    void testRotation(int expectedX, int expectedY, @NotNull Map.Entry<Integer, Integer> coordinates) {
+    void testRotation(int expectedX, int expectedY, Map.Entry<Integer, Integer> coordinates) {
         assertEquals(expectedX, (int) coordinates.getKey());
         assertEquals(expectedY, (int) coordinates.getValue());
     }
